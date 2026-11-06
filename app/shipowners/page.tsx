@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { PageHero } from "@/components/sections/PageHero";
@@ -6,11 +7,12 @@ import { CtaBanner } from "@/components/sections/CtaBanner";
 import { asset } from "@/lib/asset";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/shipowners/",
   title: "Crew supply for shipowners",
   description:
     "Vetted Myanmar officers and ratings for bulk, general cargo, container and tanker fleets. Screening, documents, medicals, visas and travel handled by Jena Shipping, Yangon.",
-};
+});
 
 const RANKS = [
   { dept: "Deck", ranks: ["Master", "Chief Officer", "2nd Officer", "3rd Officer", "Bosun", "AB", "OS", "Deck Cadet"] },
@@ -67,11 +69,11 @@ export default function ShipownersPage() {
               ))}
             </ul>
           </div>
-          <div className="grid gap-4 md:grid-cols-3 lg:gap-6">
+          <div className="grid gap-4 lg:grid-cols-3 lg:gap-6">
             {RANKS.map((d) => (
               <article key={d.dept} data-reveal className="rounded-[var(--radius-frame)] border border-line bg-white p-7 sm:p-8">
                 <h3 className="h-display text-2xl">{d.dept}</h3>
-                <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-2.5 border-t border-line pt-5 text-[15px]">
+                <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-2.5 border-t border-line pt-5 text-[15px] sm:grid-cols-3 lg:grid-cols-2">
                   {d.ranks.map((r) => (
                     <li key={r} className="flex items-center gap-2">
                       <span className="size-1.5 shrink-0 rounded-full bg-brand" />

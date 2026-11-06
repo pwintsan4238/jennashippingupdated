@@ -46,6 +46,15 @@ export function ApplicationForm({ jobSlug = "", position = "", jobTitle }: { job
   const [result, setResult] = useState<{ reference: string; demo?: boolean } | null>(null);
   const [pending, startTransition] = useTransition();
   const top = useRef<HTMLDivElement>(null);
+  const stepper = useRef<HTMLElement>(null);
+
+  // on narrow screens the step tabs scroll sideways; keep the current one in view
+  useEffect(() => {
+    const nav = stepper.current;
+    const current = nav?.querySelector<HTMLElement>('[aria-current="step"]');
+    if (!nav || !current || nav.scrollWidth <= nav.clientWidth) return;
+    nav.scrollTo({ left: current.offsetLeft - (nav.clientWidth - current.offsetWidth) / 2, behavior: "smooth" });
+  }, [step]);
 
   // restore draft
   useEffect(() => {
@@ -151,7 +160,7 @@ export function ApplicationForm({ jobSlug = "", position = "", jobTitle }: { job
         </div>
         <h3 className="h-display text-3xl">Application received</h3>
         <p className="mx-auto mt-3 max-w-md text-white/70">
-          Thank you. Our crewing team will review your documents and contact you by phone or email within 3–5 working days.
+          Thank you. Our crewing team will reply by phone or email within one working day, then review your documents with you.
         </p>
         <p className="mt-6 font-mono text-sm text-white/60">Reference number</p>
         <p className="font-mono text-2xl font-bold text-sun">{result.reference}</p>
@@ -175,7 +184,7 @@ export function ApplicationForm({ jobSlug = "", position = "", jobTitle }: { job
         )}
 
         {/* stepper */}
-        <nav aria-label="Form progress" className="sticky top-[84px] z-20 -mx-1 overflow-x-auto rounded-full border border-line bg-white/90 p-1.5 shadow-sm backdrop-blur">
+        <nav ref={stepper} aria-label="Form progress" className="sticky top-[84px] z-20 -mx-1 overflow-x-auto rounded-full [scrollbar-width:none] [&::-webkit-scrollbar]:hidden border border-line bg-white/90 p-1.5 shadow-sm backdrop-blur">
           <ol className="flex min-w-max gap-1">
             {STEPS.map((label, i) => (
               <li key={label} className="flex-1">
@@ -185,7 +194,7 @@ export function ApplicationForm({ jobSlug = "", position = "", jobTitle }: { job
                   onClick={() => goTo(i)}
                   aria-current={i === step ? "step" : undefined}
                   className={clsx(
-                    "flex w-full items-center justify-center gap-2 rounded-full px-3 py-2 text-xs font-semibold transition sm:text-sm",
+                    "flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-3 py-2 text-xs font-semibold transition sm:min-h-0 sm:text-sm",
                     i === step ? "bg-ink text-white" : i < step ? "text-ink hover:bg-paper" : "text-muted/60",
                   )}
                 >
@@ -207,7 +216,7 @@ export function ApplicationForm({ jobSlug = "", position = "", jobTitle }: { job
         {restored && (
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sun bg-sun/15 px-4 py-3 text-sm">
             <span>We restored your saved draft. {!photo && "Please re-attach your photo."}</span>
-            <button type="button" onClick={discardDraft} className="font-semibold text-red-700 hover:underline">
+            <button type="button" onClick={discardDraft} className="-my-2 min-h-11 px-2 font-semibold text-red-700 hover:underline">
               Start over
             </button>
           </div>
@@ -262,10 +271,13 @@ export function ApplicationForm({ jobSlug = "", position = "", jobTitle }: { job
           </p>
         )}
 
-        <div className="flex items-center justify-between gap-3 border-t border-line pt-6">
+        <div className="flex items-center justify-between gap-3 border-t border-line pt-6" data-floating-avoid>
           <button type="button" onClick={() => goTo(step - 1)} disabled={step === 0} className="btn btn-ghost-dark">
             ← Back
           </button>
+          <span className="font-mono text-xs text-muted sm:hidden" aria-hidden>
+            {step + 1} / {STEPS.length}
+          </span>
           <span className="hidden font-mono text-xs text-muted sm:block">
             Step {step + 1} of {STEPS.length} · draft saved on this device
           </span>

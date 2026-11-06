@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { PageHero } from "@/components/sections/PageHero";
 import { ContactFormFromQuery } from "@/components/sections/ContactFormFromQuery";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/contact/",
   title: "Contact",
   description: "Contact Jena Shipping in Thingangyun, Yangon — phone, email, Viber, WhatsApp, Telegram, or send us a message.",
-};
+});
 
 export default function ContactPage() {
 

@@ -112,7 +112,7 @@ function NrcField() {
       <legend className="field-label">
         ID No. (NRC No.)<span className="ml-0.5 text-red-600">*</span>
       </legend>
-      <div className="grid grid-cols-[80px_1fr_110px] gap-2 sm:grid-cols-[90px_1fr_130px_1fr]">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-[90px_1fr_130px_1fr]">
         <select aria-label="NRC state number" aria-invalid={errState ? true : undefined} {...register("personal.nrc.state")} className="field-input field-select">
           <option value="">No.</option>
           {NRC_STATES.map((s) => (
@@ -143,7 +143,7 @@ function NrcField() {
           inputMode="numeric"
           maxLength={6}
           {...register("personal.nrc.number")}
-          className="field-input col-span-3 tabular-nums sm:col-span-1"
+          className="field-input tabular-nums"
         />
       </div>
       {error ? (

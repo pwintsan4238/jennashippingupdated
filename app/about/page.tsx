@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { PageHero } from "@/components/sections/PageHero";
@@ -7,11 +8,12 @@ import { CtaBanner } from "@/components/sections/CtaBanner";
 import { asset } from "@/lib/asset";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/about/",
   title: "About us",
   description:
     "Jena Shipping (Jena Company Limited) is a Yangon-based crewing, training and welfare agency connecting Myanmar seafarers with reputable international shipowners.",
-};
+});
 
 const VALUES = [
   {

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getJob, getJobs } from "@/lib/jobs";
 import { ApplicationForm } from "@/components/form/ApplicationForm";
+import { pageMeta } from "@/lib/seo";
 
 export const dynamicParams = false;
 
@@ -12,7 +13,13 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const job = await getJob((await params).slug);
-  return job ? { title: `${job.title} — Apply`, description: `Apply online for ${job.title} with Jena Shipping.` } : {};
+  return job
+    ? pageMeta({
+        path: `/careers/${job.slug}/`,
+        title: `${job.title} — Apply`,
+        description: `${job.title} wanted — apply online with Jena Shipping, Yangon. Contracts with reputable international shipowners.`,
+      })
+    : {};
 }
 
 export default async function JobPage({ params }: { params: Promise<{ slug: string }> }) {

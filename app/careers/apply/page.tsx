@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { PageHero } from "@/components/sections/PageHero";
 import { ApplicationFormFromQuery } from "@/components/form/ApplicationFormFromQuery";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/careers/apply/",
   title: "Open application",
   description: "Submit your Seafarer's Application Form to Jena Shipping for any deck, engine or catering rank.",
-};
+});
 
 const NEEDS = ["Passport-style photo", "Passport, SID & Seaman Book details", "STCW certificate numbers & dates", "Last 5 vessels you served on"];
 

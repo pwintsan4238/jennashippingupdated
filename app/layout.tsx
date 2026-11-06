@@ -7,13 +7,15 @@ import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import "./globals.css";
 import { asset } from "@/lib/asset";
+import { site } from "@/lib/site";
+import { OG_IMAGE } from "@/lib/seo";
 
 const interTight = Inter_Tight({ variable: "--font-inter-tight", subsets: ["latin"], weight: ["500", "600", "700"] });
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const mono = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["latin"], weight: ["400", "700"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://jenashipping.com"),
+  metadataBase: new URL(site.url),
   title: {
     default: "Jena Shipping — Myanmar Seafarer Crewing & Maritime Training",
     template: "%s · Jena Shipping",
@@ -21,6 +23,10 @@ export const metadata: Metadata = {
   description:
     "Jena Shipping connects qualified Myanmar seafarers with reputable international shipowners, with STCW training, crane, welding and Chinese language courses, and family welfare support.",
   icons: { icon: asset("/logo.png") },
+  // defaults for pages without their own pageMeta() (e.g. the 404 page); no canonical here,
+  // or every page that forgot one would point search engines at the home page
+  openGraph: { type: "website", siteName: site.name, locale: "en_US", images: [OG_IMAGE] },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -38,7 +44,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SmoothScroll />
         <ScrollReveal />
         <Header />
-        <main>{children}</main>
+        {/* Reveal animations start slightly scaled up; clip so they never make the page scroll sideways.
+            On <main>, not <body>: body overflow is passed up to the viewport, where `clip` is ignored.
+            `clip` (unlike `hidden`) creates no scroll container, so sticky elements keep working. */}
+        <main className="overflow-x-clip">{children}</main>
         <Footer />
         <FloatingContact />
       </body>

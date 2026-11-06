@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { getJobs } from "@/lib/jobs";
 import { PageHero } from "@/components/sections/PageHero";
 import { JobBoard } from "@/components/sections/JobBoard";
@@ -6,10 +7,11 @@ import { StickyProcess } from "@/components/sections/StickyProcess";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 import { asset } from "@/lib/asset";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/careers/",
   title: "Careers",
   description: "Open seafarer jobs with Jena Shipping — deck, engine and catering positions on international vessels. Apply online.",
-};
+});
 
 
 

@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
 import { getJobs } from "@/lib/jobs";
+import { site } from "@/lib/site";
 
 export const dynamic = "force-static";
 
-const BASE = "https://jenashipping.com";
+const BASE = site.url;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const pages = ["", "/about", "/services", "/shipowners", "/careers", "/careers/apply", "/faq", "/contact"];

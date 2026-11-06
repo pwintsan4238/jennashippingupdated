@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { site } from "@/lib/site";
 
@@ -15,22 +15,49 @@ export function FloatingContact() {
   const [open, setOpen] = useState(false);
   const [showTop, setShowTop] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [blocking, setBlocking] = useState(false);
+  const box = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => {
       setShowTop(window.scrollY > 800);
       // stay out of the way of the hero; the header already has contact links
       setVisible(window.scrollY > 320);
+      // fade out while it would cover a form's buttons (e.g. "Send message" on phones)
+      const me = box.current?.getBoundingClientRect();
+      setBlocking(
+        !!me &&
+          [...document.querySelectorAll("[data-floating-avoid]")].some((el) => {
+            const r = el.getBoundingClientRect();
+            return r.bottom > me.top - 8 && r.top < me.bottom + 8 && r.right > me.left - 8 && r.left < me.right + 8;
+          }),
+      );
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
-  if (!visible && !open) return null;
+  useEffect(() => {
+    if (blocking) setOpen(false);
+  }, [blocking]);
+
+  const hidden = (!visible && !open) || blocking;
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2 print:hidden sm:bottom-6 sm:right-6">
+    <div
+      ref={box}
+      aria-hidden={hidden || undefined}
+      inert={hidden || undefined}
+      className={clsx(
+        "fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2 transition-opacity duration-200 print:hidden sm:bottom-6 sm:right-6",
+        hidden && "pointer-events-none opacity-0",
+      )}
+    >
       {open && (
         <ul className="mb-1 flex flex-col items-end gap-2">
           {channels.map((c) => (

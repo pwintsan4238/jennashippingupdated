@@ -51,7 +51,7 @@ export function TrainingShowcase({ cta = true }: { cta?: boolean }) {
                       aria-expanded={open}
                       onClick={() => setActive(i)}
                       onMouseEnter={() => setActive(i)}
-                      className="flex w-full items-baseline gap-5 py-6 text-left"
+                      className="flex w-full items-baseline gap-5 overflow-hidden py-6 text-left"
                     >
                       <span className={clsx("font-mono text-xs transition-colors", open ? "text-sun" : "text-white/40")}>
                         {String(i + 1).padStart(2, "0")}
@@ -59,7 +59,10 @@ export function TrainingShowcase({ cta = true }: { cta?: boolean }) {
                       <span className={clsx("flex-1 font-display text-xl font-semibold tracking-tight transition-colors sm:text-2xl", open ? "text-white" : "text-white/55")}>
                         {t.title}
                       </span>
-                      <span className={clsx("text-xl text-white/50 transition-transform", open && "rotate-45 text-sun")} aria-hidden>
+                      <span
+                        className={clsx("inline-flex size-6 shrink-0 items-center justify-center text-xl leading-none text-white/50 transition-transform", open && "rotate-45 text-sun")}
+                        aria-hidden
+                      >
                         +
                       </span>
                     </button>

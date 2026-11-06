@@ -10,7 +10,13 @@ import { StickyProcess } from "@/components/sections/StickyProcess";
 import { JobCard, OpenApplicationCard } from "@/components/sections/JobCard";
 import { Gallery } from "@/components/sections/Gallery";
 import { CtaBanner } from "@/components/sections/CtaBanner";
+import { pageMeta } from "@/lib/seo";
 
+export const metadata = pageMeta({
+  path: "/",
+  description:
+    "Jena Shipping connects qualified Myanmar seafarers with reputable international shipowners, with STCW training, crane, welding and Chinese language courses, and family welfare support.",
+});
 
 const RANKS = ["Master", "Chief Officer", "Chief Engineer", "2nd Engineer", "Electrical Engineer", "Bosun", "Fitter", "Pumpman", "AB", "Oiler", "Cook", "Deck Cadet", "Engine Cadet"];
 
@@ -19,7 +25,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <HomeHero job={jobs[0]} openCount={jobs.length} />
+      <HomeHero />
 
       <Marquee words={RANKS} reveal className="border-y border-line py-5 font-display text-lg font-medium text-muted sm:text-xl" />
 

@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { PageHero } from "@/components/sections/PageHero";
 import { ServicesGrid } from "@/components/sections/ServicesGrid";
 import { TrainingShowcase } from "@/components/sections/TrainingShowcase";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 import { asset } from "@/lib/asset";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/services/",
   title: "Services & Training",
   description:
     "Seafarer placement, crew supply for shipowners, LSA/FFE, crane, welding and Chinese language training, and seafarer welfare support from Jena Shipping, Yangon.",
-};
+});
 
 export default function ServicesPage() {
   return (

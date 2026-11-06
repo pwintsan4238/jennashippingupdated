@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { submitContact, type ContactState } from "@/lib/submit";
 import { INQUIRY_TYPES, type InquiryType } from "@/lib/contact";
 
@@ -8,10 +8,18 @@ export function ContactForm({ defaultType = "seafarer" }: { defaultType?: Inquir
   const [state, action, pending] = useActionState<ContactState, FormData>(submitContact, {});
   const fe = state.fieldErrors ?? {};
   const v = state.values ?? {};
+  const done = useRef<HTMLDivElement>(null);
+
+  // The confirmation is much shorter than the form, so on phones it can end up above the screen.
+  useEffect(() => {
+    if (!state.ok || !done.current) return;
+    done.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    done.current.focus({ preventScroll: true });
+  }, [state.ok]);
 
   if (state.ok) {
     return (
-      <div className="rounded-[var(--radius-frame)] bg-navy-900 p-10 text-center text-white">
+      <div ref={done} tabIndex={-1} role="status" className="rounded-[var(--radius-frame)] bg-navy-900 p-10 text-center text-white outline-none">
         <p className="h-display text-2xl">Message sent — thank you!</p>
         <p className="mt-2 text-white/70">Our team will reply by email or phone within one working day.</p>
         {state.demo && <p className="mt-4 text-xs text-white/50">Demo mode: Supabase not configured, message not stored.</p>}
@@ -56,13 +64,13 @@ export function ContactForm({ defaultType = "seafarer" }: { defaultType?: Inquir
           name="attachment"
           type="file"
           accept=".pdf,.doc,.docx,image/jpeg,image/png"
-          className="block w-full text-sm text-muted file:mr-4 file:rounded-full file:border-0 file:bg-paper file:px-4 file:py-2 file:font-semibold file:text-ink hover:file:bg-line"
+          className="block w-full text-sm text-muted file:mr-4 file:rounded-full file:border-0 file:bg-paper file:px-4 file:py-3 file:font-semibold file:text-ink hover:file:bg-line"
         />
         <p className="mt-1 text-xs text-muted">PDF, Word or image · max 5 MB</p>
         {fe.attachment && <p className="field-error">{fe.attachment}</p>}
       </div>
       {state.error && <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-700 sm:col-span-2">{state.error}</p>}
-      <div className="sm:col-span-2">
+      <div className="sm:col-span-2" data-floating-avoid>
         <button type="submit" disabled={pending} className="btn btn-ink w-full sm:w-auto">
           {pending ? "Sending…" : "Send message"}
         </button>

@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import { PageHero } from "@/components/sections/PageHero";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/faq/",
   title: "FAQ",
   description:
     "Answers to common questions about applying for seafarer jobs, documents, training courses and crew supply at Jena Shipping, Yangon.",
-};
+});
 
 type QA = { q: string; a: string };
 
@@ -108,7 +110,7 @@ export default function FaqPage() {
             <ul className="flex flex-wrap gap-2 lg:flex-col lg:gap-1">
               {GROUPS.map((g, i) => (
                 <li key={g.title}>
-                  <a href={`#faq-${i}`} className="block rounded-full border border-line bg-white px-4 py-2 text-sm font-medium text-muted hover:text-ink lg:rounded-xl lg:border-0 lg:bg-transparent lg:px-3">
+                  <a href={`#faq-${i}`} className="block rounded-full border border-line bg-white px-4 py-2.5 text-sm font-medium text-muted hover:text-ink lg:rounded-xl lg:border-0 lg:bg-transparent lg:px-3">
                     {g.title}
                   </a>
                 </li>

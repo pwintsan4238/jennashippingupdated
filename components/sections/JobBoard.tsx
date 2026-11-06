@@ -29,7 +29,7 @@ export function JobBoard({ jobs }: { jobs: Job[] }) {
               type="button"
               aria-pressed={dept === d}
               onClick={() => setDept(d)}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition ${dept === d ? "bg-ink text-white" : "text-muted hover:bg-paper hover:text-ink"}`}
+              className={`min-h-11 rounded-full px-4 py-2 text-sm font-semibold transition sm:min-h-0 ${dept === d ? "bg-ink text-white" : "text-muted hover:bg-paper hover:text-ink"}`}
             >
               {d}
             </button>

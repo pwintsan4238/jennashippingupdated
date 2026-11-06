@@ -10,9 +10,7 @@ import { asset } from "@/lib/asset";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-type HeroJob = { slug: string; title: string; vesselType: string; location: string };
-
-export function HomeHero({ job, openCount }: { job?: HeroJob; openCount: number }) {
+export function HomeHero() {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -73,30 +71,25 @@ export function HomeHero({ job, openCount }: { job?: HeroJob; openCount: number 
             <p data-hero-in className="hidden text-sm text-white/80 md:block">
               Deck · Engine · Catering — from cadet to Master &amp; Chief Engineer
             </p>
-            {job && (
-              <Link
-                data-hero-in
-                href={`/careers/${job.slug}`}
-                className="group ml-auto flex w-full max-w-sm items-center gap-4 rounded-2xl bg-white/95 p-4 text-ink shadow-2xl shadow-navy-950/30 backdrop-blur transition-colors hover:bg-white sm:w-auto"
-              >
-                <span className="relative flex size-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand">
-                  <span className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full bg-green-500 ring-2 ring-white" />
-                  <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
-                    <path d="M3 17l2 3h14l2-3M5 17V9h14v8M9 9V5h6v4M12 5V3" />
-                  </svg>
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-xs font-medium text-muted">
-                    Now hiring · {openCount} open {openCount === 1 ? "position" : "positions"}
-                  </span>
-                  <span className="block truncate font-display text-lg font-semibold">{job.title}</span>
-                  <span className="block truncate text-xs text-muted">
-                    {job.vesselType} · {job.location}
-                  </span>
-                </span>
-                <span className="flex size-9 items-center justify-center rounded-full bg-ink text-white transition group-hover:translate-x-0.5">→</span>
-              </Link>
-            )}
+            <Link
+              data-hero-in
+              href="/careers/apply"
+              className="group ml-auto flex w-full max-w-sm items-center gap-3 rounded-2xl bg-white/95 p-4 text-ink shadow-2xl shadow-navy-950/30 backdrop-blur transition-colors hover:bg-white sm:w-auto"
+            >
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand">
+                <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+                  <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z" />
+                  <path d="M14 3v5h5M9 13h6M9 17h4" />
+                </svg>
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-base font-semibold uppercase tracking-wide sm:text-lg">Submit application</span>
+                <span className="block truncate text-xs text-muted">Deck · Engine · Catering — any rank</span>
+              </span>
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-ink text-white transition group-hover:translate-x-0.5" aria-hidden>
+                →
+              </span>
+            </Link>
           </div>
         </div>
       </div>
