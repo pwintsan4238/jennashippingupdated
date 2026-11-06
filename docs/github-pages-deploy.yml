@@ -1,0 +1,47 @@
+# GitHub Pages deploy workflow (not active).
+# The live site is on Cloudflare Pages. To use GitHub Pages instead, move this file to
+# .github/workflows/deploy.yml (pushing it needs a GitHub login with the "workflow" permission).
+
+name: Deploy to GitHub Pages
+
+# The live site (jenashipping.com) is hosted on Cloudflare Pages, which builds every push to main.
+# This GitHub Pages workflow is kept as a manual fallback only (Actions tab → Run workflow).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - uses: actions/configure-pages@v5
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
