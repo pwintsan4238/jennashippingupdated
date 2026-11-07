@@ -1,0 +1,14 @@
+// Cloudflare Workers config: publish the static export in ./out (built by `npm run build`).
+// Having this file stops `wrangler deploy` from trying to convert the site into a server app (OpenNext).
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "jennashippingupdated",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./out",
+    // /about → /about/ → about/index.html, matching next.config's trailingSlash
+    "html_handling": "auto-trailing-slash",
+    // unknown URLs get the site's own 404 page (out/404.html) with a 404 status
+    "not_found_handling": "404-page"
+  }
+}

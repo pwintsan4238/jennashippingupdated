@@ -15,8 +15,9 @@ Without Supabase keys the site runs in demo mode: forms validate fully, but subm
 2. Put the URL, anon key and service-role key in `.env.local` / your host's env vars.
 
 ## Hosting
-The live site, **jenashipping.com**, is a static export hosted on **Cloudflare Pages**, connected to this GitHub repo. Every push to `main` rebuilds and deploys it.
-- Build command: `npm run build` · Output directory: `out` · Node version: `.node-version` (22)
+The live site, **jenashipping.com**, is a static export served by the Cloudflare Worker **jennashippingupdated** (Workers static assets), connected to this GitHub repo. Every push to `main` rebuilds and deploys it.
+- Build command: `npm run build` (writes `out/`) · Deploy command: `npx wrangler deploy` · Node version: `.node-version` (22)
+- `wrangler.jsonc` tells wrangler to publish `out/` as static files. Without it, wrangler tries to turn the site into a server app (OpenNext) and the deploy fails.
 - Don't set `NEXT_PUBLIC_BASE_PATH` on Cloudflare; the site is served from the domain root.
 - The public address used for canonical URLs, share previews and the sitemap is `url` in `lib/site.ts`.
 - DNS: keep the MX (Namecheap email forwarding) and TXT (SPF, Google verification) records when changing the website records.
