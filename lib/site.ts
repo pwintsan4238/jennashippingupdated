@@ -1,6 +1,11 @@
 export const site = {
   /** Final public address (no trailing slash). Used for canonical URLs, share previews, sitemap and robots.txt. */
   url: "https://jenashipping.com",
+  /**
+   * Google Apps Script web-app URL that saves form submissions to the Google Sheet
+   * (see docs/GOOGLE_SHEETS_SETUP.md). Empty = demo mode: forms validate but nothing is sent.
+   */
+  formsEndpoint: "",
   name: "Jena Shipping",
   legalName: "Jena Company Limited",
   tagline: "Empowering Myanmar Seafarers for Global Success",

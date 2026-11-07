@@ -22,7 +22,7 @@ export function ContactForm({ defaultType = "seafarer" }: { defaultType?: Inquir
       <div ref={done} tabIndex={-1} role="status" className="rounded-[var(--radius-frame)] bg-navy-900 p-10 text-center text-white outline-none">
         <p className="h-display text-2xl">Message sent — thank you!</p>
         <p className="mt-2 text-white/70">Our team will reply by email or phone within one working day.</p>
-        {state.demo && <p className="mt-4 text-xs text-white/50">Demo mode: Supabase not configured, message not stored.</p>}
+        {state.demo && <p className="mt-4 text-xs text-white/50">Demo mode: the form isn&apos;t connected to the Google Sheet yet, so this message was not sent.</p>}
       </div>
     );
   }

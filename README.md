@@ -1,18 +1,19 @@
 # Jena Shipping website
 
-Next.js 15 · Tailwind v4 · GSAP/Lenis · react-hook-form + zod · Supabase.
+Next.js 15 (static export) · Tailwind v4 · GSAP/Lenis · react-hook-form + zod · Google Sheets for form submissions.
 
 ```bash
 npm install
-cp .env.example .env.local   # add Supabase keys (optional for local dev)
 npm run dev
 ```
 
-Without Supabase keys the site runs in demo mode: forms validate fully, but submissions are only logged on the server.
+## Forms → Google Sheets
+Job applications and contact messages are saved to a Google Sheet by a Google Apps Script web app
+(`google-apps-script/Code.gs`). It also stores photos/attachments in Google Drive and emails the office.
+Setup: [docs/GOOGLE_SHEETS_SETUP.md](docs/GOOGLE_SHEETS_SETUP.md). The web-app URL goes in `formsEndpoint` in `lib/site.ts`;
+while it's empty the forms run in demo mode (they validate but send nothing).
 
-## Supabase setup
-1. Create a project, open SQL editor, run `supabase/migrations/001_init.sql` (tables, RPC, private `applications` bucket, Chief Engineer seed job).
-2. Put the URL, anon key and service-role key in `.env.local` / your host's env vars.
+The older Supabase design (`supabase/`, `app/actions/`, `docs/ADMIN_HANDOFF.md`) is not used by the live site.
 
 ## Hosting
 The live site, **jenashipping.com**, is a static export served by the Cloudflare Worker **jennashippingupdated** (Workers static assets), connected to this GitHub repo. Every push to `main` rebuilds and deploys it.

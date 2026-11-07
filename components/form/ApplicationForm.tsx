@@ -116,6 +116,7 @@ export function ApplicationForm({ jobSlug = "", position = "", jobTitle }: { job
     const fd = new FormData();
     fd.set("payload", JSON.stringify(data));
     fd.set("photo", photo);
+    if (jobTitle) fd.set("jobTitle", jobTitle);
     startTransition(async () => {
       const res = await submitApplication(fd);
       if (res.ok) {
@@ -166,7 +167,7 @@ export function ApplicationForm({ jobSlug = "", position = "", jobTitle }: { job
         <p className="font-mono text-2xl font-bold text-sun">{result.reference}</p>
         {result.demo && (
           <p className="mx-auto mt-6 max-w-md rounded-xl bg-white/10 p-3 text-xs text-white/70">
-            Demo mode: Supabase is not configured yet, so this application was validated but not stored.
+            Demo mode: the form isn&apos;t connected to the Google Sheet yet, so this application was checked but not sent.
           </p>
         )}
       </div>

@@ -1,15 +1,16 @@
 /**
- * Client-side form submit handlers for the static (GitHub Pages) build.
+ * Client-side form submit handlers for the static site.
  *
- * The site is currently frontend-only: these validate the input and return a demo
- * success result without storing anything.
- *
- * TODO (backend): replace the "demo" branches with calls to the backend / admin API.
- * The original Supabase server-action versions live in app/actions/ for reference.
+ * After validation, submissions are sent to a Google Apps Script web app that adds a row to the
+ * company's Google Sheet, saves the photo/attachment to Google Drive and emails the office
+ * (google-apps-script/Code.gs, setup in docs/GOOGLE_SHEETS_SETUP.md).
+ * If `site.formsEndpoint` is empty the forms run in demo mode: they validate but send nothing.
  */
 import { z } from "zod";
 import { applicationSchema } from "@/lib/application-schema";
 import { INQUIRY_TYPES } from "@/lib/contact";
+import { applicationFields, contactFields, type SheetField } from "@/lib/sheet-rows";
+import { site } from "@/lib/site";
 
 export type ContactState = {
   ok?: boolean;
@@ -44,6 +45,37 @@ const FILE_TYPES = [
 const MAX_PHOTO = 5 * 1024 * 1024;
 const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
+const SEND_FAILED = `Your details couldn't be sent. Please check your internet connection and try again, or call ${site.phones[0].label}.`;
+
+type UploadFile = { name: string; type: string; base64: string };
+
+async function toUpload(file: File): Promise<UploadFile> {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  let binary = "";
+  for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return { name: file.name, type: file.type, base64: btoa(binary) };
+}
+
+/**
+ * POST to the Apps Script web app. Sent as text/plain so the browser makes a "simple" request
+ * (no CORS preflight, which Apps Script can't answer); the script parses the JSON body itself.
+ */
+async function sendToSheet(kind: "application" | "contact", fields: SheetField[], file?: File): Promise<{ ok: true; reference: string } | { ok: false; error: string }> {
+  try {
+    const res = await fetch(site.formsEndpoint, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ kind, fields, file: file ? await toUpload(file) : undefined, website: "" }),
+      redirect: "follow",
+    });
+    const data = (await res.json()) as { ok?: boolean; reference?: string; error?: string };
+    if (data.ok && data.reference) return { ok: true, reference: data.reference };
+    return { ok: false, error: data.error || SEND_FAILED };
+  } catch {
+    return { ok: false, error: SEND_FAILED };
+  }
+}
+
 export async function submitContact(_prev: ContactState, formData: FormData): Promise<ContactState> {
   const values = Object.fromEntries(
     ["name", "email", "phone", "inquiryType", "message", "website"].map((k) => [k, String(formData.get(k) ?? "")]),
@@ -56,12 +88,15 @@ export async function submitContact(_prev: ContactState, formData: FormData): Pr
   }
 
   const file = formData.get("attachment");
-  if (file instanceof File && file.size > 0 && (!FILE_TYPES.includes(file.type) || file.size > MAX_FILE)) {
+  const hasFile = file instanceof File && file.size > 0;
+  if (hasFile && (!FILE_TYPES.includes(file.type) || file.size > MAX_FILE)) {
     return { error: "Attachment must be PDF, Word or image, under 5 MB.", fieldErrors: { attachment: "Invalid file" }, values };
   }
 
-  // TODO (backend): send parsed.data (+ attachment) to the backend API here.
-  return { ok: true, demo: true };
+  if (!site.formsEndpoint) return { ok: true, demo: true };
+
+  const res = await sendToSheet("contact", contactFields(parsed.data), hasFile ? file : undefined);
+  return res.ok ? { ok: true } : { error: res.error, values };
 }
 
 export async function submitApplication(formData: FormData): Promise<SubmitResult> {
@@ -85,6 +120,10 @@ export async function submitApplication(formData: FormData): Promise<SubmitResul
     return { ok: false, error: "Photo must be a JPG, PNG or WEBP image under 5 MB." };
   }
 
-  // TODO (backend): send parsed.data + photo to the backend API and return its reference.
-  return { ok: true, reference: `DEMO-${crypto.randomUUID().slice(0, 8).toUpperCase()}`, demo: true };
+  if (!site.formsEndpoint) {
+    return { ok: true, reference: `DEMO-${crypto.randomUUID().slice(0, 8).toUpperCase()}`, demo: true };
+  }
+
+  const jobTitle = String(formData.get("jobTitle") ?? "") || undefined;
+  return sendToSheet("application", applicationFields(parsed.data, jobTitle), photo);
 }
