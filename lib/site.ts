@@ -5,7 +5,7 @@ export const site = {
    * Google Apps Script web-app URL that saves form submissions to the Google Sheet
    * (see docs/GOOGLE_SHEETS_SETUP.md). Empty = demo mode: forms validate but nothing is sent.
    */
-  formsEndpoint: "",
+  formsEndpoint: "https://script.google.com/macros/s/AKfycbyfWcPwwX_d8iTM3_O55ZZPUo-lK-xdINYqwVdtvFIkx_7MVbV7g3PA9XustG0v6Hhz/exec",
   name: "Jena Shipping",
   legalName: "Jena Company Limited",
   tagline: "Empowering Myanmar Seafarers for Global Success",
