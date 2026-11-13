@@ -18,7 +18,7 @@ var NOTIFY_EMAIL = "jenashipping972023@gmail.com";
 // The Google Sheet that collects submissions: the long ID in its address
 // (docs.google.com/spreadsheets/d/<ID>/edit). Works whether or not this script was created from inside the sheet.
 // Leave "" to use the sheet the script is attached to (Extensions → Apps Script).
-var SPREADSHEET_ID = "1rzR5EU8n5FiTbctIMX5qipgH0rVAkn_Haai41oOkK4w";
+var SPREADSHEET_ID = "11o6OAQivTHgi-zj2L3RCKI5VTliB08kTdZqy4swqN5c";
 
 // Name of the Google Drive folder for photos and attachments (created on first upload, private).
 var UPLOAD_FOLDER = "Jena Shipping website uploads";
