@@ -41,13 +41,21 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
       <body className={`${interTight.variable} ${inter.variable} ${mono.variable} antialiased`}>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-white"
+        >
+          Skip to main content
+        </a>
         <SmoothScroll />
         <ScrollReveal />
         <Header />
         {/* Reveal animations start slightly scaled up; clip so they never make the page scroll sideways.
             On <main>, not <body>: body overflow is passed up to the viewport, where `clip` is ignored.
             `clip` (unlike `hidden`) creates no scroll container, so sticky elements keep working. */}
-        <main className="overflow-x-clip">{children}</main>
+        <main id="main" tabIndex={-1} className="overflow-x-clip outline-none">
+          {children}
+        </main>
         <Footer />
         <FloatingContact />
       </body>

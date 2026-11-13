@@ -63,7 +63,7 @@ export function DateField({ value, onChange, onBlur, min, max, invalid, disabled
         onClick={() => setOpen((o) => !o)}
         className={`field-input flex items-center justify-between gap-2 text-left ${invalid ? "!border-red-500" : ""}`}
       >
-        <span className={value ? "tabular-nums" : "text-muted/60"}>{value ? formatDMY(value) : placeholder}</span>
+        <span className={value ? "tabular-nums" : "italic text-muted/90"}>{value ? formatDMY(value) : placeholder}</span>
         <svg aria-hidden viewBox="0 0 24 24" className="size-4 shrink-0 text-muted" fill="none" stroke="currentColor" strokeWidth="2">
           <rect x="3" y="5" width="18" height="16" rx="2" />
           <path d="M16 3v4M8 3v4M3 10h18" />

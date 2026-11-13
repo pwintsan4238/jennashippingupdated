@@ -86,7 +86,7 @@ export default async function JobPage({ params }: { params: Promise<{ slug: stri
             )}
           </div>
 
-          <aside className="lg:sticky lg:top-28 lg:self-start">
+          <div className="lg:sticky lg:top-28 lg:self-start">
             <div data-reveal className="rounded-[var(--radius-frame)] border border-line bg-white p-7">
               <h2 className="font-display text-lg font-semibold">Job summary</h2>
               <dl className="mt-4 divide-y divide-line">
@@ -102,7 +102,7 @@ export default async function JobPage({ params }: { params: Promise<{ slug: stri
               </a>
               <p className="mt-4 text-center text-xs text-muted">Takes about 10 minutes · draft saved automatically</p>
             </div>
-          </aside>
+          </div>
         </div>
       </section>
 

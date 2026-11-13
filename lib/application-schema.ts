@@ -26,6 +26,8 @@ const digits = (label: string, max: number) =>
 const isObject = (p: { value: unknown }) => typeof p.value === "object" && p.value !== null;
 
 const MOBILE = /^(\+?959|09)\d{7,9}$/;
+/** Any other country: must start with + and the country code, e.g. +65 8123 4567 (seafarers are often abroad). */
+const INTL_MOBILE = /^\+\d{8,15}$/;
 const PHONE = /^\+?\d{6,15}$/;
 const stripPhone = (v: string) => v.replace(/[\s\-()]/g, "");
 
@@ -55,7 +57,10 @@ const personalSchema = z
     boilerSuit: z.enum(BOILER_SUITS, { error: "Choose a size" }),
     shoeSize: z.enum(SHOE_SIZES, { error: "Choose a size" }),
     homePhone: z.string().trim().refine((v) => v === "" || PHONE.test(stripPhone(v)), "Invalid phone number"),
-    mobile: z.string().trim().refine((v) => MOBILE.test(stripPhone(v)), "Myanmar mobile, e.g. 09 782945494"),
+    mobile: z
+      .string()
+      .trim()
+      .refine((v) => MOBILE.test(stripPhone(v)) || INTL_MOBILE.test(stripPhone(v)), "e.g. 09 782945494, or with country code +65 8123 4567"),
     email: z.email("Invalid email address"),
     nrc: nrcSchema,
   })

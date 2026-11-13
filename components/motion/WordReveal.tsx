@@ -19,7 +19,8 @@ export function WordReveal({ segments, className }: { segments: Segment[]; class
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         gsap.fromTo(
           "[data-word]",
-          { opacity: 0.12, y: 8 },
+          // starts at 75% (not near-invisible) so even the grey words keep the 3:1 contrast required for large text
+          { opacity: 0.75, y: 8 },
           {
             opacity: 1,
             y: 0,

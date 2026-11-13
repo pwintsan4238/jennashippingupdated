@@ -25,7 +25,11 @@ function scrollToFirstError() {
   requestAnimationFrame(() => {
     const el = document.querySelector<HTMLElement>('#apply-form [aria-invalid="true"], #apply-form [role="alert"]');
     el?.scrollIntoView({ behavior: "smooth", block: "center" });
-    if (el && "focus" in el) el.focus({ preventScroll: true });
+    if (!el) return;
+    // an error message (e.g. the photo one) isn't focusable by default, so give it a tabindex first;
+    // otherwise focus silently stays on the Continue button and keyboard / screen-reader users get no cue
+    if (el.tabIndex < 0 && !el.matches("input, select, textarea, button, a[href]")) el.tabIndex = -1;
+    el.focus({ preventScroll: true });
   });
 }
 
@@ -159,7 +163,7 @@ export function ApplicationForm({ jobSlug = "", position = "", jobTitle }: { job
             <path d="m5 12 5 5L20 7" />
           </svg>
         </div>
-        <h3 className="h-display text-3xl">Application received</h3>
+        <h2 className="h-display text-3xl">Application received</h2>
         <p className="mx-auto mt-3 max-w-md text-white/70">
           Thank you. Our crewing team will reply by phone or email within one working day, then review your documents with you.
         </p>
@@ -178,10 +182,12 @@ export function ApplicationForm({ jobSlug = "", position = "", jobTitle }: { job
     <FormProvider {...methods}>
       <div ref={top} className="scroll-mt-28" />
       <form id="apply-form" noValidate onSubmit={handleSubmit(onValid, onInvalid)} className="space-y-6">
-        {jobTitle && (
+        {jobTitle ? (
           <h2 data-reveal className="h-display text-3xl sm:text-4xl">
             Apply for the position: <span className="text-brand">{jobTitle}</span>
           </h2>
+        ) : (
+          <h2 className="sr-only">Your application</h2>
         )}
 
         {/* stepper */}

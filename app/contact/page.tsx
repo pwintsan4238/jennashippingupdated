@@ -22,7 +22,7 @@ export default function ContactPage() {
 
       <section className="py-14 sm:py-20">
         <div className="container-x grid gap-4 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-6">
-          <aside className="flex flex-col gap-4 lg:gap-6">
+          <div className="flex flex-col gap-4 lg:gap-6">
             <div data-reveal className="rounded-[var(--radius-frame)] bg-navy-900 p-7 text-white sm:p-8">
               <p className="text-sm text-white/60">Call the office</p>
               <ul className="mt-2 space-y-1">
@@ -54,7 +54,7 @@ export default function ContactPage() {
                 <span className="size-2 rounded-full bg-green-500" /> {site.hours}
               </p>
             </div>
-          </aside>
+          </div>
 
           <div data-reveal className="flex flex-col rounded-[var(--radius-frame)] border border-line bg-white p-6 sm:p-10">
             <div className="mb-8 flex flex-wrap items-end justify-between gap-3 border-b border-line pb-6">

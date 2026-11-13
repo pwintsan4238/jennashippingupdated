@@ -55,7 +55,7 @@ export function IntroFacts() {
                   </svg>
                 </span>
                 <div>
-                  <h3 className="font-display text-xl font-semibold tracking-tight">{f.title}</h3>
+                  <h2 className="font-display text-xl font-semibold tracking-tight">{f.title}</h2>
                   <p className="mt-1.5 leading-relaxed text-muted">{f.body}</p>
                 </div>
               </div>

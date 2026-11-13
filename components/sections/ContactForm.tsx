@@ -36,14 +36,16 @@ export function ContactForm({ defaultType = "seafarer" }: { defaultType?: Inquir
         {fe.name && <p className="field-error">{fe.name}</p>}
       </div>
       <div>
-        <label htmlFor="c-email" className="field-label">Email<span className="text-red-600">*</span></label>
-        <input id="c-email" name="email" defaultValue={v.email} type="email" required autoComplete="email" aria-invalid={fe.email ? true : undefined} className="field-input" />
+        <label htmlFor="c-email" className="field-label">Email</label>
+        <input id="c-email" name="email" defaultValue={v.email} type="email" autoComplete="email" aria-invalid={fe.email ? true : undefined} aria-describedby="c-reach" className="field-input" />
         {fe.email && <p className="field-error">{fe.email}</p>}
       </div>
       <div>
         <label htmlFor="c-phone" className="field-label">Phone / Viber</label>
-        <input id="c-phone" name="phone" defaultValue={v.phone} type="tel" autoComplete="tel" placeholder="09 …" className="field-input" />
+        <input id="c-phone" name="phone" defaultValue={v.phone} type="tel" autoComplete="tel" placeholder="09 …" aria-invalid={fe.phone ? true : undefined} aria-describedby="c-reach" className="field-input" />
+        {fe.phone && <p className="field-error">{fe.phone}</p>}
       </div>
+      <p id="c-reach" className="-mt-2 text-xs text-muted sm:col-span-2">Please give an email or a phone / Viber number (one is enough) so we can reply.</p>
       <div>
         <label htmlFor="c-type" className="field-label">Inquiry type</label>
         <select id="c-type" name="inquiryType" defaultValue={v.inquiryType ?? defaultType} className="field-input field-select">

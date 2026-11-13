@@ -90,7 +90,7 @@ html.lenis, html.lenis body { height: auto; }
     @apply mb-1.5 block text-[13px] font-semibold text-ink;
   }
   .field-input {
-    @apply block w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-[15px] text-ink shadow-sm outline-none transition placeholder:text-muted/60 focus:border-brand focus:ring-4 focus:ring-brand/15 aria-[invalid=true]:border-red-500 aria-[invalid=true]:ring-red-500/15 disabled:bg-paper;
+    @apply block w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-[15px] text-ink shadow-sm outline-none transition placeholder:italic placeholder:text-muted/90 focus:border-brand focus:ring-4 focus:ring-brand/15 aria-[invalid=true]:border-red-500 aria-[invalid=true]:ring-red-500/15 disabled:bg-paper;
   }
   .field-select {
     @apply appearance-none bg-no-repeat pr-9;

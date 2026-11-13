@@ -25,14 +25,27 @@ export type SubmitResult =
   | { ok: true; reference: string; demo?: boolean }
   | { ok: false; error: string; fieldErrors?: Record<string, string> };
 
-const contactSchema = z.object({
-  name: z.string().trim().min(2, "Please enter your name").max(80),
-  email: z.email("Invalid email address"),
-  phone: z.string().trim().max(30),
-  inquiryType: z.enum(Object.keys(INQUIRY_TYPES) as [keyof typeof INQUIRY_TYPES]),
-  message: z.string().trim().min(10, "Please write a little more (10+ characters)").max(3000),
-  website: z.string().max(0),
-});
+const PHONE_OK = /^\+?\d{6,15}$/;
+
+const contactSchema = z
+  .object({
+    name: z.string().trim().min(2, "Please enter your name").max(80),
+    // Email or phone / Viber is enough: many seafarers only have a phone number.
+    email: z
+      .string()
+      .trim()
+      .max(120)
+      .refine((v) => v === "" || z.email().safeParse(v).success, "Invalid email address"),
+    phone: z
+      .string()
+      .trim()
+      .max(30)
+      .refine((v) => v === "" || PHONE_OK.test(v.replace(/[\s\-()]/g, "")), "Invalid phone number"),
+    inquiryType: z.enum(Object.keys(INQUIRY_TYPES) as [keyof typeof INQUIRY_TYPES]),
+    message: z.string().trim().min(10, "Please write a little more (10+ characters)").max(3000),
+    website: z.string().max(0),
+  })
+  .refine((v) => v.email !== "" || v.phone !== "", { path: ["email"], message: "Enter an email or a phone / Viber number so we can reply" });
 
 const MAX_FILE = 5 * 1024 * 1024;
 const FILE_TYPES = [
@@ -80,15 +93,18 @@ export async function submitContact(_prev: ContactState, formData: FormData): Pr
   const values = Object.fromEntries(
     ["name", "email", "phone", "inquiryType", "message", "website"].map((k) => [k, String(formData.get(k) ?? "")]),
   );
+  const file = formData.get("attachment");
+  const hasFile = file instanceof File && file.size > 0;
+  // The browser can't keep a chosen file when the form is shown again after an error, so say so.
+  const reattach = hasFile ? " Your attachment was cleared, so please attach it again." : "";
+
   const parsed = contactSchema.safeParse(values);
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
     for (const i of parsed.error.issues) fieldErrors[String(i.path[0])] ??= i.message;
-    return { error: "Please check the highlighted fields.", fieldErrors, values };
+    return { error: `Please check the highlighted fields.${reattach}`, fieldErrors, values };
   }
 
-  const file = formData.get("attachment");
-  const hasFile = file instanceof File && file.size > 0;
   if (hasFile && (!FILE_TYPES.includes(file.type) || file.size > MAX_FILE)) {
     return { error: "Attachment must be PDF, Word or image, under 5 MB.", fieldErrors: { attachment: "Invalid file" }, values };
   }
@@ -96,7 +112,7 @@ export async function submitContact(_prev: ContactState, formData: FormData): Pr
   if (!site.formsEndpoint) return { ok: true, demo: true };
 
   const res = await sendToSheet("contact", contactFields(parsed.data), hasFile ? file : undefined);
-  return res.ok ? { ok: true } : { error: res.error, values };
+  return res.ok ? { ok: true } : { error: `${res.error}${reattach}`, values };
 }
 
 export async function submitApplication(formData: FormData): Promise<SubmitResult> {
