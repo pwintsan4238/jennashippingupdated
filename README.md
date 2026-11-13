@@ -13,7 +13,6 @@ Job applications and contact messages are saved to a Google Sheet by a Google Ap
 Setup: [docs/GOOGLE_SHEETS_SETUP.md](docs/GOOGLE_SHEETS_SETUP.md). The web-app URL goes in `formsEndpoint` in `lib/site.ts`;
 while it's empty the forms run in demo mode (they validate but send nothing).
 
-The older Supabase design (`supabase/`, `app/actions/`, `docs/ADMIN_HANDOFF.md`) is not used by the live site.
 
 ## Hosting
 The live site, **jenashipping.com**, is a static export served by the Cloudflare Worker **jennashippingupdated** (Workers static assets), connected to this GitHub repo. Every push to `main` rebuilds and deploys it.

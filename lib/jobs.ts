@@ -1,5 +1,4 @@
 import "server-only";
-import { publicClient } from "./supabase/server";
 
 export type Department = "Deck" | "Engine" | "Catering" | "Shore-based";
 
@@ -17,8 +16,8 @@ export type Job = {
   duties: string[];
 };
 
-/** Fallback used until the jobs table is configured in Supabase. */
-const SEED_JOBS: Job[] = [
+/** The openings shown on /careers. Edit this list to add or remove a job (a new slug gets its own page). */
+const JOBS: Job[] = [
   {
     slug: "chief-engineer",
     title: "Chief Engineer",
@@ -50,47 +49,8 @@ const SEED_JOBS: Job[] = [
   },
 ];
 
-type JobRow = {
-  slug: string;
-  title: string;
-  rank_code: string;
-  department: Department;
-  vessel_type: string;
-  location: string;
-  experience: string;
-  contract_duration: string;
-  sign_on_window: string;
-  requirements: string[] | null;
-  duties: string[] | null;
-};
-
-const fromRow = (r: JobRow): Job => ({
-  slug: r.slug,
-  title: r.title,
-  rankCode: r.rank_code,
-  department: r.department,
-  vesselType: r.vessel_type,
-  location: r.location,
-  experience: r.experience,
-  contractDuration: r.contract_duration,
-  signOnWindow: r.sign_on_window,
-  requirements: r.requirements ?? [],
-  duties: r.duties ?? [],
-});
-
 export async function getJobs(): Promise<Job[]> {
-  const db = publicClient();
-  if (!db) return SEED_JOBS;
-  const { data, error } = await db
-    .from("jobs")
-    .select("*")
-    .eq("is_open", true)
-    .order("created_at", { ascending: false });
-  if (error || !data) {
-    console.error("getJobs:", error?.message);
-    return SEED_JOBS;
-  }
-  return (data as JobRow[]).map(fromRow);
+  return JOBS;
 }
 
 export async function getJob(slug: string): Promise<Job | null> {
