@@ -1,0 +1,38 @@
+# Old WordPress addresses -> new pages (Cloudflare static-assets redirects; this file is not served to visitors).
+# Format: /old /new status   (301 = permanent, so search engines move to the new address)
+# Each page is listed with and without a trailing slash.
+
+# Pages
+/about-us-3          /about/               301
+/about-us-3/         /about/               301
+/career              /careers/             301
+/career/             /careers/             301
+/contact-2           /contact/             301
+/contact-2/          /contact/             301
+/blog                /                     301
+/blog/               /                     301
+
+# Jobs (the old "jobpress" plugin used /jobs/)
+/jobs                /careers/             301
+/jobs/               /careers/             301
+/jobs/chief-engineer   /careers/chief-engineer/   301
+/jobs/chief-engineer/  /careers/chief-engineer/   301
+
+# A much older version of the site
+/default.htm                              /   301
+/My_Homepage_Files/Page1.html             /   301
+/My_Homepage_Files/Page2.html             /   301
+/My_Homepage_Files/Page3.html             /   301
+/My_Homepage_Files/Page4.html             /   301
+/My_Homepage_Files/Page5.html             /   301
+/My_Homepage_Files/error.html             /   301
+/My_Homepage_Files/noscript.html          /   301
+/My_Homepage_Files/Download/jena_appl.doc /careers/apply/   301
+
+# WordPress sitemaps (Google Search Console may still request these)
+/wp-sitemap.xml                  /sitemap.xml   301
+/wp-sitemap-posts-page-1.xml     /sitemap.xml   301
+/wp-sitemap-posts-jobpress-1.xml /sitemap.xml   301
+
+# Old logo / site-icon images that other sites may still link to
+/wp-content/uploads/2024/11/cropped-*   /logo.png   301
