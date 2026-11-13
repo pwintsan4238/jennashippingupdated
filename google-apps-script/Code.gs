@@ -15,6 +15,11 @@
 // Who gets an email for each new submission (comma-separate several addresses). Leave "" for no email.
 var NOTIFY_EMAIL = "jenashipping972023@gmail.com";
 
+// The Google Sheet that collects submissions: the long ID in its address
+// (docs.google.com/spreadsheets/d/<ID>/edit). Works whether or not this script was created from inside the sheet.
+// Leave "" to use the sheet the script is attached to (Extensions → Apps Script).
+var SPREADSHEET_ID = "1rzR5EU8n5FiTbctIMX5qipgH0rVAkn_Haai41oOkK4w";
+
 // Name of the Google Drive folder for photos and attachments (created on first upload, private).
 var UPLOAD_FOLDER = "Jena Shipping website uploads";
 
@@ -81,8 +86,12 @@ function sanitizeFields(fields) {
     .map(function (f) { return [f[0].trim().slice(0, 60), String(f[1] == null ? "" : f[1]).slice(0, 5000)]; });
 }
 
+function openSpreadsheet() {
+  return SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
+}
+
 function getSheet(name) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = openSpreadsheet();
   return ss.getSheetByName(name) || ss.insertSheet(name);
 }
 
@@ -148,7 +157,7 @@ function notify(sheetName, reference, fields, fileUrl) {
       .filter(function (f) { return f[1]; })
       .map(function (f) { return f[0] + ": " + (f[1].indexOf("\n") > -1 ? "\n  " + f[1].split("\n").join("\n  ") : f[1]); });
     if (fileUrl) lines.push("File: " + fileUrl);
-    lines.push("", "Sheet: " + SpreadsheetApp.getActiveSpreadsheet().getUrl());
+    lines.push("", "Sheet: " + openSpreadsheet().getUrl());
     var name = (fields.filter(function (f) { return f[0] === "English name" || f[0] === "Name"; })[0] || [])[1] || "";
     var subject = (sheetName === SHEETS.application.name ? "New application " : "New message ") + reference + (name ? " — " + name : "");
     MailApp.sendEmail({ to: NOTIFY_EMAIL, subject: subject, body: lines.join("\n") });
